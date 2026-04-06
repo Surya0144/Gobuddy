@@ -9,7 +9,6 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/me
 const SOCKET_URL = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000';
 
 export default function ChatApp() {
-  const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [joinName, setJoinName] = useState('');
@@ -21,7 +20,9 @@ export default function ChatApp() {
     // Check local storage for session
     const storedUser = localStorage.getItem('chatUser');
     if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
+      setTimeout(() => {
+        setCurrentUser(JSON.parse(storedUser));
+      }, 0);
     }
   }, []);
 
@@ -32,7 +33,6 @@ export default function ChatApp() {
     const newSocket = io(SOCKET_URL, {
       withCredentials: true
     });
-    setSocket(newSocket);
 
     // Initial Fetch
     fetch(`${API_URL}?userId=${currentUser.id}`)
