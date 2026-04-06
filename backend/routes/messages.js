@@ -1,14 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const DOMPurify = require('dompurify');
-const { JSDOM } = require('jsdom');
 const Message = require('../models/Message');
-
-const window = new JSDOM('').window;
-const purify = DOMPurify(window);
-
-// Helper to sanitize incoming text
-const sanitize = (text) => purify.sanitize(text);
 
 // GET: Fetch recent messages (excluding those deleted for everyone, or deleted for the requester)
 router.get('/', async (req, res) => {
@@ -50,8 +42,8 @@ router.post('/', async (req, res) => {
     }
     
     // Sanitize string content
-    const sanitizedText = sanitize(text).trim();
-    const sanitizedUsername = sanitize(username).trim();
+    const sanitizedText = text.trim();
+    const sanitizedUsername = username.trim();
 
     if (sanitizedText.length === 0 || sanitizedText.length > 2000) {
       return res.status(400).json({ error: 'Invalid text length' });
