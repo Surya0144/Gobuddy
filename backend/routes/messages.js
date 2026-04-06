@@ -2,6 +2,20 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
 
+// Simple XSS sanitization helper (Escapes HTML tags)
+const escapeHTML = (str) => {
+  if (!str) return '';
+  return str.replace(/[&<>'"]/g, 
+    tag => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;'
+    }[tag] || tag)
+  );
+};
+
 // GET: Fetch recent messages (excluding those deleted for everyone, or deleted for the requester)
 router.get('/', async (req, res) => {
   try {
@@ -20,7 +34,6 @@ router.get('/', async (req, res) => {
     // Normalize response for frontend
     const cleanedMessages = messages.map(msg => ({
       ...msg.toObject(),
-      // Redact text if it's somehow missing or just a safety measure
       text: msg.text
     }));
 
@@ -42,8 +55,8 @@ router.post('/', async (req, res) => {
     }
     
     // Sanitize string content
-    const sanitizedText = text.trim();
-    const sanitizedUsername = username.trim();
+    const sanitizedText = escapeHTML(text.trim());
+    const sanitizedUsername = escapeHTML(username.trim());
 
     if (sanitizedText.length === 0 || sanitizedText.length > 2000) {
       return res.status(400).json({ error: 'Invalid text length' });

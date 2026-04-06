@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
-const xss = require('xss-clean');
 const http = require('http');
 const { Server } = require('socket.io');
 
@@ -15,7 +14,6 @@ const server = http.createServer(app);
 
 // Security Middlewares
 app.use(helmet());
-app.use(xss());
 
 const allowedOrigin = process.env.FRONTEND_URL || 'http://localhost:3000';
 
