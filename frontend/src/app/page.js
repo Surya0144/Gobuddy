@@ -206,7 +206,7 @@ export default function ChatApp() {
         <header className={styles.chatHeader}>
           <div style={{fontWeight: 600, display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
             <MessageCircle size={20} color="var(--primary)" />
-            <span>Adverayze General</span>
+            <span>Gobuddy</span>
           </div>
           <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem'}}>
             <User size={16} />
